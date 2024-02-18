@@ -1,4 +1,5 @@
 name: Build and upload docker image
+
 on:
   pull_request:
     branches:
@@ -8,12 +9,13 @@ on:
       - 'develop'
 
 jobs:
-  build & upload:
+  build_and_upload:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Check if docker available or not
+      - name: Check if Docker available
         run: which docker
 
       - name: Login to Docker Hub
@@ -22,17 +24,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: build fronend
+      - name: Build frontend
         run: docker build -t mern-fe:$(git log -1 --pretty=format:%h) ./client
 
-      - name: build backend
+      - name: Build backend
         run: docker build -t mern-be:$(git log -1 --pretty=format:%h) ./server
-      - name: upload docker images
-        run: |
-          docker images
-          docker tag mern-fe:$(git log -1 --pretty=format:%h) dpaktamang/mern-ecomerce-fe:$(git log -1 --pretty=format:%h)
-          docker tag mern-be:$(git log -1 --pretty=format:%h) dpaktamang/mern-ecomerce-be:$(git log -1 --pretty=format:%h)
 
-          # push
-          docker push dpaktamang/mern-ecomerce-fe:$(git log -1 --pretty=format:%h)
-          docker push dpaktamang/mern-ecomerce-be:$(git log -1 --pretty=format:%h)
+      - name: Tag and push Docker images
+        run: |
+          IMAGE_TAG=$(git log -1 --pretty=format:%h)
+          docker tag mern-fe:$IMAGE_TAG dpaktamang/mern-ecomerce-fe:$IMAGE_TAG
+          docker tag mern-be:$IMAGE_TAG dpaktamang/mern-ecomerce-be:$IMAGE_TAG
+          docker push dpaktamang/mern-ecomerce-fe:$IMAGE_TAG
+          docker push dpaktamang/mern-ecomerce-be:$IMAGE_TAG
