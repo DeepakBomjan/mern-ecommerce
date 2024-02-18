@@ -17,4 +17,13 @@ jobs:
       
       - name: Check if docker available or not
         run : which docker
+
+      - env:
+          DOCKER_IMAGE_TAG: $((git log -1 --pretty=format:%h))
+      
+      - name: build fronend
+        run : docker build -t mern-fe:${DOCKER_IMAGE_TAG} ./client
+      
+      - name: build backend
+        run: docker build -t mern-be:${DOCKER_IMAGE_TAG} ./server
  
