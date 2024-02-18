@@ -16,5 +16,5 @@ jobs:
 
       
       - name: Check if docker available or not
-      - run : which docker
+        run : which docker
  
