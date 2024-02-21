@@ -28,7 +28,7 @@ data "aws_security_groups" "test" {
 
 
 data "template_file" "user_data" {
-  template = file("./scripts/user-data.sh")
+  template = file("../scripts/user-data.sh")
 }
 
 
