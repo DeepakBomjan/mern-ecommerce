@@ -43,6 +43,7 @@ jobs:
           docker push dpaktamang/mern-ecomerce-be:$(git log -1 --pretty=format:%h)
   deploy:
     runs-on: ubuntu-latest
+    needs: build-upload
     steps:
       - uses: actions/checkout@v3
       
@@ -56,6 +57,7 @@ jobs:
         with:
           terraform_wrapper: false 
       - name: create ec2 instance
+        working-directory: .github/IaC
         run: |
           terraform init
           terraform validate
